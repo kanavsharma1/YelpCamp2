@@ -2,6 +2,16 @@ var express = require('express');
 
 var app = express();
 var bodyParser = require('body-parser');
+var mongoose = require('mongoose');
+
+mongoose.connect("mongodb://localhost/yelpcamp", { useNewUrlParser: true });
+
+//SCHEMA SETUP
+var campgroundSchema = new mongoose.Schema({
+    name: String,
+    image: String
+});
+var Campground = mongoose.model("Campground", campgroundSchema);
 
 var campgrounds = [
     { name: "salmon creek", image: "" },
@@ -28,8 +38,11 @@ app.get("/", (req, res) => {
 })
 
 app.get("/campgrounds", (req, res) => {
-
-    res.render("campgrounds", { campgrounds: campgrounds });
+    //get all campgrounds from db
+    Campground.find({}, (err, result) => {    // result here is all campgrounds from DB
+        if (err) console.log(err);
+        else res.render("campgrounds", { campgrounds: result });
+    })
 });
 
 app.post("/campgrounds", (req, res) => {
@@ -37,9 +50,12 @@ app.post("/campgrounds", (req, res) => {
     var name = req.body.name;
     var image = req.body.image;
     var newCampground = { name: name, image: image };
-    campgrounds.push(newCampground);
-    //redirect back to campground page
-    res.redirect("/campgrounds");
+    //create new campground and save in database
+    Campground.create(newCampground, (err, newCamp) => {
+        if (err) console.log(err);
+        else res.redirect("/campgrounds");
+    })
+
 });
 
 app.get("/campgrounds/new", (req, res) => {
