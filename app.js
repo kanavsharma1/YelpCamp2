@@ -4,32 +4,19 @@ var app = express();
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 
+
+app.use(bodyParser.urlencoded({ extended: true }));
+app.set("view engine", "ejs");
+
 mongoose.connect("mongodb://localhost/yelpcamp", { useNewUrlParser: true });
 
 //SCHEMA SETUP
 var campgroundSchema = new mongoose.Schema({
     name: String,
-    image: String
+    image: String,
+    description: String
 });
 var Campground = mongoose.model("Campground", campgroundSchema);
-
-var campgrounds = [
-    { name: "salmon creek", image: "" },
-    { name: "Granite Hill", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRqEtom84s-GfoGX2kQteC6XPoznI20buiV9vXWAWWIz1V4dhCX" },
-    { name: "Mountain goats", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-1pnGqlT-YQVAySfjjvasbOl4ezGQKzS5bx3QXO0J5DgUQDcY" },
-    { name: "salmon creek", image: "" },
-    { name: "Granite Hill", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRqEtom84s-GfoGX2kQteC6XPoznI20buiV9vXWAWWIz1V4dhCX" },
-    { name: "Mountain goats", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-1pnGqlT-YQVAySfjjvasbOl4ezGQKzS5bx3QXO0J5DgUQDcY" },
-    { name: "salmon creek", image: "" },
-    { name: "Granite Hill", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRqEtom84s-GfoGX2kQteC6XPoznI20buiV9vXWAWWIz1V4dhCX" },
-    { name: "Mountain goats", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-1pnGqlT-YQVAySfjjvasbOl4ezGQKzS5bx3QXO0J5DgUQDcY" },
-    { name: "salmon creek", image: "" },
-    { name: "Granite Hill", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRqEtom84s-GfoGX2kQteC6XPoznI20buiV9vXWAWWIz1V4dhCX" },
-    { name: "Mountain goats", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-1pnGqlT-YQVAySfjjvasbOl4ezGQKzS5bx3QXO0J5DgUQDcY" }
-
-
-];
-
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
 
@@ -41,27 +28,37 @@ app.get("/campgrounds", (req, res) => {
     //get all campgrounds from db
     Campground.find({}, (err, result) => {    // result here is all campgrounds from DB
         if (err) console.log(err);
-        else res.render("campgrounds", { campgrounds: result });
-    })
+        else res.render("index", { campgrounds: result });
+    });
 });
 
 app.post("/campgrounds", (req, res) => {
     //get data from form
     var name = req.body.name;
     var image = req.body.image;
-    var newCampground = { name: name, image: image };
+    var desc = req.body.description;
+    var newCampground = { name: name, image: image, description: desc };
     //create new campground and save in database
     Campground.create(newCampground, (err, newCamp) => {
         if (err) console.log(err);
         else res.redirect("/campgrounds");
-    })
-
+    });
 });
 
 app.get("/campgrounds/new", (req, res) => {
     res.render("new");
-})
+});
+
+app.get("/campgrounds/:id", (req, res) => {
+    Campground.findById(req.params.id, (err, foundCampground) => {
+        if (err) {
+            console.log(err);
+        } else {
+            res.render("show", { campground: foundCampground });
+        }
+    });
+});
 
 app.listen(3000, () => {
     console.log("server is on");
-})
+});
