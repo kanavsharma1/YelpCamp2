@@ -17,9 +17,12 @@
                 <div class="caption">
                     <h3><%= campground.name %></h3>
                 </div>
+                <p>
+                    <a href="/campgrounds/<%= campground._id %>" class="btn btn-primary">More info</a>
+                </p>
             </div>
         </div>
         <% }) %>
     </div>
 </div>
-  <% include partials/footer %>
+<% include partials/footer %>
