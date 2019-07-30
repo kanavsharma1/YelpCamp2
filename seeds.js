@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var Campground = require('./models/campground');
+var Comment = require('./models/comment');
 
 var data = [{
     name: "shenandoe Nation",
@@ -34,8 +35,24 @@ function seedDB() {
                 if (err) console.log(err);
                 else console.log("added a campground");
                 //Create a Comment 
-                //push it into comments array
-                //save the campground
+                Comment.create({
+                    text: "there should have been a wifi connection",
+                    author: "kanav sharma"
+                }, (err, comment) => {
+                    if (err) {
+                        console.log(err);
+                    }
+                    else {
+                        //push it into comments array
+                        console.log(comment);
+                        Campground.comments.push(comment);
+                        //save the campground
+                        Campground.save();
+                        console.log("created new comment");
+                    }
+                })
+
+
             });
         });
     });
