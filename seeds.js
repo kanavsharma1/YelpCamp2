@@ -25,7 +25,7 @@ var data = [{
 
 function seedDB() {
     //remove all campgrounds
-    Campground.remove({}, error => {
+    Campground.deleteMany({}, error => {
         if (error) console.log(error);
         console.log("removed campgrounds");
 
@@ -44,10 +44,10 @@ function seedDB() {
                     }
                     else {
                         //push it into comments array
-                        console.log(comment);
-                        Campground.comments.push(comment);
-                        //save the campground
-                        Campground.save();
+
+                        data.comments.push(comment);
+                        //save the campground 
+                        data.save();
                         console.log("created new comment");
                     }
                 })
