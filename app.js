@@ -12,7 +12,7 @@ seedDB();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
 
-mongoose.connect("mongodb://localhost/yelp_camp_2", { useNewUrlParser: true });
+mongoose.connect("mongodb://localhost/yelpcamp", { useNewUrlParser: true });
 
 
 app.use(bodyParser.urlencoded({ extended: true }));
