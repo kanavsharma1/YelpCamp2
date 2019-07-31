@@ -14,8 +14,22 @@ seedDB();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
 app.use(express.static(__dirname + "/public"));
+mongoose.connect("mongodb://localhost/yelpcamp_v4", { useNewUrlParser: true });
 
-mongoose.connect("mongodb://localhost/yelpcamp", { useNewUrlParser: true });
+//PASSPORT CONFIGURATIONS
+app.use(require('express-session')({
+    secret: "kanav's restfull app",
+    resave: false,
+    saveUninitialized: false
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new localStratergy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+//==================================================================
+
+
 
 
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -90,6 +104,7 @@ app.post("/campgrounds/:id/comment", (req, res) => {
                     //connect new comment to campground
                     campground.comments.push(comment);
                     campground.save();
+                    //redirect campground to show page
                     res.redirect("/campgrounds/" + campground._id);
                 }
             })
@@ -98,7 +113,26 @@ app.post("/campgrounds/:id/comment", (req, res) => {
     });
 
 
-    //redirect campground to show page
+
+});
+
+//=======================AUTH ROUTES ==============================//
+app.get("/register", (req, res) => {
+    res.render("register");
+});
+
+app.post("/register", (req, res) => {
+    console.log("inside register post route")
+    let newUser = new User({ username: req.body.username });
+    User.register(newUser, req.body.password, (err, userRegistered) => {
+        if (err) {
+            console.log(err);
+            return res.render("register");
+        }
+        passport.authenticate("local")(req, res, () => {
+            res.redirect("/campgrounds");
+        });
+    });
 });
 
 app.listen(3000, () => {
