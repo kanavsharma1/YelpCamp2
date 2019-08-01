@@ -30,31 +30,31 @@ function seedDB() {
         console.log("removed campgrounds");
 
         //ADD a few campgrounds to work with
-        data.forEach((seed) => {
-            Campground.create(seed, (err, data) => {
-                if (err) console.log(err);
-                else console.log("added a campground");
-                //Create a Comment 
-                Comment.create({
-                    text: "there should have been a wifi connection",
-                    author: "kanav sharma"
-                }, (err, comment) => {
-                    if (err) {
-                        console.log(err);
-                    }
-                    else {
-                        //push it into comments array
+        // data.forEach((seed) => {
+        //     Campground.create(seed, (err, data) => {
+        //         if (err) console.log(err);
+        //         else console.log("added a campground");
+        //         //Create a Comment 
+        //         Comment.create({
+        //             text: "there should have been a wifi connection",
+        //             author: "kanav sharma"
+        //         }, (err, comment) => {
+        //             if (err) {
+        //                 console.log(err);
+        //             }
+        //             else {
+        //                 //push it into comments array
 
-                        data.comments.push(comment);
-                        //save the campground 
-                        data.save();
-                        console.log("created new comment");
-                    }
-                })
+        //                 data.comments.push(comment);
+        //                 //save the campground 
+        //                 data.save();
+        //                 console.log("created new comment");
+        //             }
+        //         })
 
 
-            });
-        });
+        //     });
+        // });
     });
 
 
