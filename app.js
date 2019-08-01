@@ -16,7 +16,7 @@ app.set("view engine", "ejs");
 app.use(express.static(__dirname + "/public"));
 mongoose.connect("mongodb://localhost/yelpcamp_v4", { useNewUrlParser: true });
 
-//PASSPORT CONFIGURATIONS
+//PASSPORT CONFIGURATIONS====================================///
 app.use(require('express-session')({
     secret: "kanav's restfull app",
     resave: false,
@@ -29,11 +29,13 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 //==================================================================
 
-
-
-
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
+
+app.use((req, res, next) => {
+    res.locals.currUser = req.user;
+    next();
+})
 
 app.get("/", (req, res) => {
     res.render("campgrounds/landing");
@@ -53,6 +55,7 @@ app.post("/campgrounds", (req, res) => {
     var image = req.body.image;
     var desc = req.body.description;
     var newCampground = { name: name, image: image, description: desc };
+
     //create new campground and save in database
     Campground.create(newCampground, (err, newCamp) => {
         if (err) console.log(err);
@@ -84,7 +87,6 @@ app.get("/campgrounds/:id/comment/new", isLoggedIn, (req, res) => {
             res.render("comments/new", { campground: campground });
         }
     });
-
 });
 
 app.post("/campgrounds/:id/comment", (req, res) => {
@@ -111,9 +113,6 @@ app.post("/campgrounds/:id/comment", (req, res) => {
 
         }
     });
-
-
-
 });
 
 //=======================AUTH ROUTES ==============================//
