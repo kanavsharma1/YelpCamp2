@@ -14,12 +14,16 @@ router.get("/", (req, res) => {
     });
 });
 
-router.post("/", (req, res) => {
+router.post("/", isLoggedIn, (req, res) => {
     //get data from form
     var name = req.body.name;
     var image = req.body.image;
     var desc = req.body.description;
-    var newCampground = { name: name, image: image, description: desc };
+    var author = {
+        id: req.user._id,
+        username: req.user.username
+    }
+    var newCampground = { name: name, image: image, description: desc, author: author };
 
     //create new campground and save in database
     Campground.create(newCampground, (err, newCamp) => {
@@ -37,7 +41,6 @@ router.get("/:id", (req, res) => {
         if (err) {
             console.log(err);
         } else {
-            console.log("long query in show page" + foundCampground);
             res.render("campgrounds/show", { campground: foundCampground });
         }
     });
