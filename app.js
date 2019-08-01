@@ -33,8 +33,7 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 //==================================================================
 
-
-
+//middleware
 app.use((req, res, next) => {
     res.locals.currUser = req.user;
     next();
