@@ -60,7 +60,7 @@ app.post("/campgrounds", (req, res) => {
     });
 });
 
-app.get("/campgrounds/new", (req, res) => {
+app.get("/campgrounds/new", isLoggedIn, (req, res) => {
     res.render("campgrounds/new");
 });
 
@@ -76,7 +76,7 @@ app.get("/campgrounds/:id", (req, res) => {
 });
 
 //==========================COMMENTS ROUTES ====================================
-app.get("/campgrounds/:id/comment/new", (req, res) => {
+app.get("/campgrounds/:id/comment/new", isLoggedIn, (req, res) => {
     //find campground by id
     Campground.findById(req.params.id, (err, campground) => {
         if (err) console.log(err);
@@ -134,7 +134,33 @@ app.post("/register", (req, res) => {
         });
     });
 });
+//=========================LOGIN routes=================///
+app.get("/login", (req, res) => {
+    res.render("login");
+});
 
+app.post("/login", passport.authenticate("local",
+    {
+        successRedirect: "/campgrounds",
+        failureRedirect: "/login"
+    }),
+    (req, res) => {
+
+    });
+//logout route
+app.get("/logout", (req, res) => {
+    req.logOut();
+    res.redirect("/campgrounds");
+});
+
+function isLoggedIn(req, res, next) {
+    if (req.isAuthenticated()) {
+        return next();
+    }
+
+    res.redirect("/login");
+
+}
 app.listen(3000, () => {
     console.log("server is on");
 });
