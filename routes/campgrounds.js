@@ -2,10 +2,6 @@ var express = require('express');
 var router = express.Router({ mergeParams: true });
 var Campground = require('../models/campground');
 
-
-
-
-
 router.get("/", (req, res) => {
     //get all campgrounds from db
     Campground.find({}, (err, result) => {    // result here is all campgrounds from DB
@@ -24,7 +20,6 @@ router.post("/", isLoggedIn, (req, res) => {
         username: req.user.username
     }
     var newCampground = { name: name, image: image, description: desc, author: author };
-
     //create new campground and save in database
     Campground.create(newCampground, (err, newCamp) => {
         if (err) console.log(err);
@@ -64,6 +59,14 @@ router.put("/:id", (req, res) => {
         else res.redirect("/campgrounds/" + req.params.id)
     })
     //redirect
+});
+
+//DELETE ROUTE
+router.delete("/:id", (req, res) => {
+    Campground.findOneAndDelete(req.params.id, err => {
+        if (err) res.redirect("/campgrounds");
+        else res.redirect("/campgrounds");
+    });
 });
 
 //middleware
