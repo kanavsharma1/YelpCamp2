@@ -44,6 +44,7 @@ router.post("/", (req, res) => {
         }
     });
 });
+
 //GET EDIT FORM ROUTE
 router.get("/:comment_id/edit", (req, res) => {
     Comment.findById(req.params.comment_id, (err, foundComment) => { //find comment by id 
@@ -69,6 +70,16 @@ router.put("/:comment_id", (req, res) => {
             res.redirect("/campgrounds/" + req.params.id);
         }
     })
+});
+
+//COMMENTS DESTROY ROUTE
+router.delete("/:comment_id", (req, res) => {
+    //find comment by ID and delete it 
+    Comment.findByIdAndDelete(req.params.comment_id, (err) => {
+        if (err) res.redirect("back");
+        //if no error redirect to the campground 
+        else res.redirect("/campgrounds/" + req.params.id);
+    });
 });
 
 //middleware
