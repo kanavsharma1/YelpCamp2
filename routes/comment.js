@@ -3,7 +3,7 @@ var router = express.Router({ mergeParams: true });
 var Comment = require('../models/comment');
 var Campground = require('../models/campground');
 
-
+//NEW COMMENT FORM ROUTE
 router.get("/new", isLoggedIn, (req, res) => {
     //find campground by id
     Campground.findById(req.params.id, (err, campground) => {
@@ -14,6 +14,7 @@ router.get("/new", isLoggedIn, (req, res) => {
     });
 });
 
+//ADD/SAVE COMMENT ROUTE
 router.post("/", (req, res) => {
     //lookup campground using ID
     Campground.findById(req.params.id, (err, campground) => {
@@ -42,6 +43,32 @@ router.post("/", (req, res) => {
             })
         }
     });
+});
+//GET EDIT FORM ROUTE
+router.get("/:comment_id/edit", (req, res) => {
+    Comment.findById(req.params.comment_id, (err, foundComment) => { //find comment by id 
+        if (err) {
+            res.redirect("back");
+        }
+        else {
+            //Render the template and pass the comment to the template
+            res.render("comments/edit", { campground_id: req.params.id, comment: foundComment });
+        }
+    })
+});
+
+//UPDATE COMMENT ROUTE
+router.put("/:comment_id", (req, res) => {
+    //find the comment by ID and update it 
+    Comment.findByIdAndUpdate(req.params.comment_id, req.body.comment, (err, updatedComment) => {
+        if (err) {
+            res.redirect("back");
+        }
+        else {
+            //Redirect to the campground after everything went well 
+            res.redirect("/campgrounds/" + req.params.id);
+        }
+    })
 });
 
 //middleware
