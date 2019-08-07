@@ -6,6 +6,7 @@ var express = require('express'),
     mongoose = require('mongoose'),
     Campground = require('./models/campground'),
     seedDB = require('./seeds'),
+    flash = require("connect-flash"),
     Comment = require('./models/comment'),
     User = require('./models/user'),
     app = express();
@@ -20,6 +21,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
 app.use(express.static(__dirname + "/public"));
 app.use(methodOverride("_method"));
+app.use(flash());
 mongoose.connect("mongodb://localhost/yelpcamp_v4", { useNewUrlParser: true, useFindAndModify: false });
 
 //PASSPORT CONFIGURATIONS====================================///
