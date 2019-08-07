@@ -24,7 +24,10 @@ router.post("/", middleware.isLoggedIn, (req, res) => {
     //create new campground and save in database
     Campground.create(newCampground, (err, newCamp) => {
         if (err) console.log(err);
-        else res.redirect("/campgrounds");
+        else {
+
+            res.redirect("/campgrounds");
+        }
     });
 });
 
@@ -53,8 +56,9 @@ router.get("/:id/edit", middleware.checkCampgroundOwnership, (req, res) => {
 router.put("/:id", middleware.checkCampgroundOwnership, (req, res) => {
     //find and update correct campground
     Campground.findByIdAndUpdate(req.params.id, req.body.campground, (err, updatedCampground) => {
-        console.log("under find and update query")
+
         if (err) res.redirect("/campgrounds");
+
         else res.redirect("/campgrounds/" + req.params.id)
     })
     //redirect
