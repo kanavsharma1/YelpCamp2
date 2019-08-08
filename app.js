@@ -22,7 +22,7 @@ app.set("view engine", "ejs");
 app.use(express.static(__dirname + "/public"));
 app.use(methodOverride("_method"));
 app.use(flash());
-mongoose.connect("mongodb://localhost/yelp_campdb", { useNewUrlParser: true, useFindAndModify: false });
+mongoose.connect("mongodb+srv://kanavsharma73:kanavsharma73@yelpcamp-b5dbo.mongodb.net/yelpcamp", { useNewUrlParser: true, useFindAndModify: false });
 
 //PASSPORT CONFIGURATIONS====================================///
 app.use(require('express-session')({
