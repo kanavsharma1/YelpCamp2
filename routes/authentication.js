@@ -25,7 +25,6 @@ router.post("/register", (req, res) => {
     });
 });
 
-
 //LOGIN FORM ROUTE
 router.get("/login", (req, res) => {
 
