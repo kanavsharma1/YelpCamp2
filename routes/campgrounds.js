@@ -14,13 +14,14 @@ router.get("/", (req, res) => {
 router.post("/", middleware.isLoggedIn, (req, res) => {
     //get data from form
     var name = req.body.name;
+    var price = req.body.price;
     var image = req.body.image;
     var desc = req.body.description;
     var author = {
         id: req.user._id,
         username: req.user.username
     }
-    var newCampground = { name: name, image: image, description: desc, author: author };
+    var newCampground = { name: name, price: price, image: image, description: desc, author: author };
     //create new campground and save in database
     Campground.create(newCampground, (err, newCamp) => {
         if (err) console.log(err);
